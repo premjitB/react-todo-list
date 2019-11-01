@@ -13,38 +13,45 @@ export class App extends Component {
   };
 
   handleChange = e => {
-    console.log("handle change");
     this.setState({
       item: e.target.value
     });
   };
   handleSubmit = e => {
-    console.log("handle submit");
     e.preventDefault();
-    console.log(this.state);
     const newItem = {
       id: this.state.id,
-      item: this.state.item
+      title: this.state.item
     };
     const updatedItems = [...this.state.items, newItem];
-    this.setState(
-      {
-        items: updatedItems,
-        id: uuid(),
-        editItem: false,
-        item: ""
-      },
-      () => console.log(this.state)
-    );
+    this.setState({
+      items: updatedItems,
+      id: uuid(),
+      editItem: false,
+      item: ""
+    });
   };
   clearList = () => {
+    this.setState({
+      items: []
+    });
     console.log("clear list");
   };
   handleEdit = id => {
-    console.log(`handle edit ${id}`);
+    const filteredItems = this.state.items.filter(item => item.id !== id);
+    const itemToEdit = this.state.items.find(item => item.id === id);
+    this.setState({
+      items: filteredItems,
+      item: itemToEdit.title,
+      editItem: true,
+      id: id
+    });
   };
   handleDelete = id => {
-    console.log(`handle delete ${id}`);
+    const filteredItems = this.state.items.filter(item => item.id !== id);
+    this.setState({
+      items: filteredItems
+    });
   };
 
   render() {
@@ -58,7 +65,7 @@ export class App extends Component {
                 item={this.state.item}
                 handleChange={this.handleChange}
                 handleSubmit={this.handleSubmit}
-                handleEdit={this.handleEdit}
+                editItem={this.state.editItem}
               />
               <TodoList
                 items={this.state.items}
